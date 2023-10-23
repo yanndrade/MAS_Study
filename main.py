@@ -1,4 +1,5 @@
-from src.ant import *
+from agents import *
+from model import *
 
 
 
@@ -6,7 +7,7 @@ if __name__ == "__main__":
 
     # positions = []
 
-    # cologne = ant_cologne(10,5,5)
+    cologne = ant_cologne(10,5,5)
 
     # print_grid(cologne)
 
@@ -17,6 +18,7 @@ if __name__ == "__main__":
     #     else: 
     #         for ant in cell_content:
     #             ant.move()
+
 
     
 

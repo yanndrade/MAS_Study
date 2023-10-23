@@ -1,54 +1,22 @@
-#!/usr/bin/env python3
+from mesa import Model
+from mesa.time import SimultaneousActivation
+from mesa.space import MultiGrid
 
-import mesa
-from mesa.model import Model
-
-import numpy as np
-import matplotlib.pyplot as plt
+from agents import *
 
 
-class ant_agent(mesa.Agent):
-    """Ant agent"""
-
-    def __init__(self, unique_id: int, model: Model) -> None:
-        super().__init__(unique_id, model)
-
-        #self.phero = 1
-
-        self.coords = (0,0)
-
-
-    def move(self):
-        step = self.model.grid.get_neighborhood(
-            self.coords,
-            moore = False,
-            include_center=False
-        )
-        new_step = self.random.choice(step)
-
-        print(f"Ant:{self.unique_id} moving from {self.coords} to {new_step}")
-        
-        self.model.grid.move_agent(self, new_step)
-
-    def step(self):
-        print(self.model.phero)
-        
-
-        #print(f"Hi i am a ant number {self.unique_id} and i have {self.phero} pheromones")
-
-
-
-class ant_cologne(mesa.Model):
+class World(Model):
 
     def __init__(self, num, L, H):
 
         self.num_agents = num
-        self.schedule = mesa.time.RandomActivation(self)
-        self.grid = mesa.space.MultiGrid(L,H,torus=True)
-        self.phero = 0
+        self.schedule = SimultaneousActivation(self)
+
+        self.grid = MultiGrid(L,H,torus=True)
+        #self.phero = 0
 
         for i in range(self.num_agents):
-            ant = ant_agent(i,self)
+            ant = Ant(self.next_id(), self)
             self.schedule.add(ant)
             coords= (self.random.randrange(0,L),self.random.randrange(0,H))
             ant.coords = coords
