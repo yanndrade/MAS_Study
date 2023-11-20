@@ -35,9 +35,16 @@ class Environment(Agent):
 
     def get_pos(self):
         return self.pos
+    
+    def advance(self):
+        pass
+    
+    def step(self):
+        self.add_phero()
 
 
-class ant_agent(mesa.Agent):
+
+class ant_agent(Agent):
     """Ant agent"""
 
     def __init__(self, unique_id: int, model: Model) -> None:
@@ -65,6 +72,7 @@ class ant_agent(mesa.Agent):
         self.model.grid.move_agent(self, new_step)
 
     def phero_move(self):
+        pass
 
 
     def step(self):

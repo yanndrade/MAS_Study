@@ -4,37 +4,27 @@ from mesa.space import MultiGrid
 
 from agents import *
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 class World(Model):
 
     def __init__(self, num, L, H):
+        super().__init__()
 
         self.num_agents = num
         self.schedule = SimultaneousActivation(self)
-
-        self.grid = MultiGrid(L,H,torus=True)
+        self.grid = MultiGrid(L,H,torus=True)   
         #self.phero = 0
 
-        for i in range(self.num_agents):
-            ant = Ant(self.next_id(), self)
-            self.schedule.add(ant)
-            coords= (self.random.randrange(0,L),self.random.randrange(0,H))
-            ant.coords = coords
-
-            self.grid.place_agent(ant,coords)
-        
-
-    
+        for (content, (x, y)) in self.grid.coord_iter():
+            cell = Environment(self.next_id(),pos=(x,y), model=self)
+            self.grid.place_agent(cell,(x,y))
+            self.schedule.add(cell)
+            
 
     def step(self):
-        ## Add phero into a cell if the cell has an ant
-        for cell in self.grid.coord_iter():
-            cell_content,x,y = cell
-            if len(cell_content)!=0:
-                print(f"cell content: {cell_content}\n")
-                self.phero = 1*len(cell_content) ## Adding more phero if the cell has more than one ant
-
-        
         self.schedule.step()
 
 # class phero_grid(mesa.Model):
@@ -48,15 +38,14 @@ class World(Model):
 #         for
         
 
-
-
-
 def print_grid(model):
 
     agent_counts = np.zeros((model.grid.width, model.grid.height))
 
     for cell in model.grid.coord_iter():
-        cell_content, x, y = cell
+        cell_content, (x, y) = cell
+        for agent in cell_content:
+            print(agent.amount_phero)
         agent_count = len(cell_content)
         agent_counts[x][y] = agent_count
 
